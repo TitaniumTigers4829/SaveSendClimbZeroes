@@ -1,16 +1,36 @@
-from networktables import NetworkTables
-import time
+from time import sleep
+from read_write_climb_zeroes import *
+
+# Constants for the names of network table entries
+RECEIVE_LEFT_NAME = "leftClimbHookHeight"
+RECEIVE_RIGHT_NAME = "rightClimbHookHeight"
+SEND_LEFT_NAME = "leftClimbHookZero"
+SEND_RIGHT_NAME = "rightClimbHookZero"
 
 
-def receive_climb_values(nt):
-    left_climb_zero = nt.getNumber("leftClimbHookHeight", -1)
-    right_climb_zero = nt.getNumber("rightClimbHookHeight", -1)
-    print(f"left {left_climb_zero}")
-    print(f"right {right_climb_zero}")
-    time.sleep(3)
+def receive_climb_values(nt) -> bool:
+    """
+    Handles receiving the climb zeroes from the robot.
+    :param nt: The network table created from the .getTable method.
+    :return: True if the values were successfully received, False if not.
+    """
+    # Gets the climb zeroes from the network table
+    left_climb_zero = nt.getNumber(RECEIVE_LEFT_NAME, -1)
+    right_climb_zero = nt.getNumber(RECEIVE_RIGHT_NAME, -1)
+    sleep(3)
+    if left_climb_zero != -1 and right_climb_zero != -1:
+        # Saves the climb zeroes in a text file
+        write_climb_values(str(left_climb_zero), str(right_climb_zero))
+        return True
+    else:
+        return False
 
 
 def send_climb_values(nt):
-    nt.putNumber("leftClimbHookZero", 3686)
-    time.sleep(3)
+    # Gets the saved zeroes from the text file
+    left_hook_zero, right_hook_zero = read_climb_values()
+    # Puts the saved zeroes in the network table
+    nt.putNumber(SEND_LEFT_NAME, float(left_hook_zero))
+    nt.putNumber(SEND_RIGHT_NAME, float(right_hook_zero))
+    sleep(3)
 

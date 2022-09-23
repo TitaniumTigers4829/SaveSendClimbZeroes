@@ -14,7 +14,7 @@ def main():
     NetworkTables.startClientTeam(4829)
     nt = NetworkTables.getTable("climbZerosTable")
 
-    time.sleep(1)
+    sleep(1)
 
     # app = QApplication(sys.argv)
     #
