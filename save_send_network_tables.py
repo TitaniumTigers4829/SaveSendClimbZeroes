@@ -9,7 +9,7 @@ RECEIVE_LEFT_NAME = "leftClimbHookHeight"
 RECEIVE_RIGHT_NAME = "rightClimbHookHeight"
 SEND_LEFT_NAME = "leftClimbHookZero"
 SEND_RIGHT_NAME = "rightClimbHookZero"
-SEND_CONFIRMATION_NAME = "zeroesReceivedSuccessfully"
+SEND_CONFIRMATION_NAME = "leftZeroReceivedSuccessfully"
 
 
 def receive_climb_values(nt: NetworkTable):
@@ -36,10 +36,10 @@ def send_climb_values(nt: NetworkTable):
     :param nt: The network table created from the .getTable method.
     :return:
     """
+    # Gets the saved zeroes from the text file
+    left_hook_zero, right_hook_zero = read_climb_values()
     values_sent = False
     while not values_sent:
-        # Gets the saved zeroes from the text file
-        left_hook_zero, right_hook_zero = read_climb_values()
         # Puts the saved zeroes in the network table
         nt.putNumber(SEND_LEFT_NAME, float(left_hook_zero))
         nt.putNumber(SEND_RIGHT_NAME, float(right_hook_zero))

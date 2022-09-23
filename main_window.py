@@ -42,7 +42,6 @@ class MainWindow(QMainWindow):
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setGeometry(150, 200, 400, 100)
 
-    # TODO: Check that this works first
     def establish_network_table_connection(self):
         cond = threading.Condition()
         notified = [False]
