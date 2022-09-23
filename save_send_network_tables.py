@@ -1,4 +1,7 @@
 from time import sleep
+
+from _pynetworktables import *
+
 from read_write_climb_zeroes import *
 
 # Constants for the names of network table entries
@@ -6,9 +9,10 @@ RECEIVE_LEFT_NAME = "leftClimbHookHeight"
 RECEIVE_RIGHT_NAME = "rightClimbHookHeight"
 SEND_LEFT_NAME = "leftClimbHookZero"
 SEND_RIGHT_NAME = "rightClimbHookZero"
+SEND_CONFIRMATION_NAME = "zeroesReceivedSuccessfully"
 
 
-def receive_climb_values(nt) -> bool:
+def receive_climb_values(nt: NetworkTable) -> bool:
     """
     Handles receiving the climb zeroes from the robot.
     :param nt: The network table created from the .getTable method.
@@ -26,7 +30,12 @@ def receive_climb_values(nt) -> bool:
         return False
 
 
-def send_climb_values(nt):
+def send_climb_values(nt: NetworkTable):
+    """
+    Handles sending the saved climb zeroes to the robot.
+    :param nt: The network table created from the .getTable method.
+    :return:
+    """
     # Gets the saved zeroes from the text file
     left_hook_zero, right_hook_zero = read_climb_values()
     # Puts the saved zeroes in the network table
@@ -34,3 +43,14 @@ def send_climb_values(nt):
     nt.putNumber(SEND_RIGHT_NAME, float(right_hook_zero))
     sleep(3)
 
+
+def verify_values_were_sent(nt: NetworkTable) -> bool:
+    """
+    This function uses another network table entry to verify that the robot received the sent zeroes.
+    :param nt: The network table created from the .getTable method.
+    :return: True if the robot successfully received the zeroes, False if not.
+    """
+    # Gets the climb zeroes from the network table
+    send_confirmation = nt.getBoolean(SEND_CONFIRMATION_NAME, False)
+    sleep(3)
+    return send_confirmation
