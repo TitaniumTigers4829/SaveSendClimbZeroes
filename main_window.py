@@ -42,6 +42,7 @@ class MainWindow(QMainWindow):
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.label.setGeometry(150, 200, 400, 100)
 
+    # TODO: Check that this works first
     def establish_network_table_connection(self):
         cond = threading.Condition()
         notified = [False]
@@ -55,7 +56,6 @@ class MainWindow(QMainWindow):
         logging.basicConfig(level=logging.DEBUG)
         NetworkTables.startClientTeam(4829)
         NetworkTables.addConnectionListener(connectionListener, immediateNotify=True)
-        nt = NetworkTables.getTable("climbZerosTable")
 
         with cond:
             print("Waiting")
@@ -65,6 +65,7 @@ class MainWindow(QMainWindow):
 
         # This is reached once it is connected to the network table
         self.connected_to_network_table = True
+        nt = NetworkTables.getTable("climbZerosTable")
         self.nt = nt
         print("Connected")
 
